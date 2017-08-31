@@ -27,4 +27,12 @@ subprocess.call(['docker', 'login', 'daocloud.io',
 
 # Pulling all daocloud images.
 daocloud_images = images.get_daocloud_images(gcr_images)
-images.download_images(daocloud_images)
+# images.download_images(daocloud_images)
+
+# Tagging daocloud images as gcr images.
+for gcr_image in gcr_images:
+    for daocloud_image in daocloud_images:
+        if gcr_image.split('/')[-1] == daocloud_image.split('/')[-1]:
+            logging.debug('Tagging image {} as {}'.format(
+                daocloud_image, gcr_image))
+            subprocess.call(['docker', 'tag', daocloud_image, gcr_image])
