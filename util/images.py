@@ -11,7 +11,7 @@ def get_gcr_images(filepaths):
 
     gcr_images = set()
     image_pattern = re.compile('gcr.io[/a-zA-Z0-9_\-:.@]+[\'|\s]{0}')
-    for fp in file_paths:
+    for fp in filepaths:
         for i, line in enumerate(open(fp)):
             for match in re.findall(image_pattern, line):
                 gcr_images.add(match)
