@@ -1,4 +1,3 @@
-import os
 import logging
 import subprocess
 from util import filepaths
@@ -20,10 +19,6 @@ logging.info('The current version of Kubernetes is {}'.format(version))
 # Getting all gcr images in the files.
 gcr_images = images.get_gcr_images(filepaths)
 
-# Logging to daocloud registry.
-logging.debug('Logging to daocloud registry')
-subprocess.call(['docker', 'login', 'daocloud.io',
-                 '-u', 'wathehack', '-p', 'dangerous'])
-
-# Pulling images from gcr, tagging the image and pushing to daocloud registry.
-images.upload_daocloud_images(gcr_images)
+# Pulling all daocloud images.
+daocloud_images = images.get_daocloud_images(gcr_images):
+images.download_images(daocloud_images)
