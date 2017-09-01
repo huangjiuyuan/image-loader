@@ -25,7 +25,8 @@ def get_daocloud_images(gcr_images):
 
     daocloud_images = set()
     for image in gcr_images:
-        daocloud_image = 'daocloud.io/daocloud/' + image.split('/')[-1]
+        daocloud_image = 'registry.cn-hangzhou.aliyuncs.com/ylck/' + \
+            image.split('/')[-1]
         daocloud_images.add(daocloud_image)
     return daocloud_images
 
@@ -40,7 +41,8 @@ def upload_daocloud_images(gcr_images):
         try:
             logging.debug('Pulling image {}'.format(image))
             subprocess.call(['docker', 'pull', image])
-            daocloud_image = 'daocloud.io/daocloud/' + image.split('/')[-1]
+            daocloud_image = 'registry.cn-hangzhou.aliyuncs.com/ylck/' + \
+                image.split('/')[-1]
             logging.debug('Pushing image {}'.format(daocloud_image))
             subprocess.call(['docker', 'tag', image, daocloud_image])
             subprocess.call(['docker', 'push', daocloud_image])
