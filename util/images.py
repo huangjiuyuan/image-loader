@@ -52,6 +52,7 @@ def upload_daocloud_images(gcr_images, registry, username):
         for i in range(0, 3):
             success = subprocess.call(['docker', 'push', daocloud_image])
             if success == 0:
+                subprocess.call(['docker', 'rmi', daocloud_image, ' ', image])
                 break
             if i == 2:
                 return False
