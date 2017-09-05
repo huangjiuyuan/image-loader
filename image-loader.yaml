@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: image-loader
+  labels:
+    k8s-app: image-loader
+spec:
+  template:
+    metadata:
+      labels:
+        name: image-loader
+    spec:
+      containers:
+      - name: image-loader
+        image: image-loader
+        command: ["./load", "-h"]
+        volumeMounts:
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
