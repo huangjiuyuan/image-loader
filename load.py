@@ -1,16 +1,23 @@
+#!/usr/bin/python
 import os
 import logging
 import subprocess
+import sys
 from util import filepaths
 from util import images
+from util import login
 
 # Getting all file paths in target directory.
 gopath = os.getenv('GOPATH')
 directory = '/src/k8s.io/kubernetes/test/e2e'
 filepaths = filepaths.get_filepaths(
     gopath + directory)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 logging.info('Walking through directory {}'.format(directory))
+
+success, registry, username, password = login.login()
+if success != True:
+    sys.exit(1)
 
 # Getting Kubernetes version.
 os.chdir(gopath + directory)
@@ -20,14 +27,12 @@ logging.info('The current version of Kubernetes is {}'.format(version))
 # Getting all gcr images in the files.
 gcr_images = images.get_gcr_images(filepaths)
 
-# Logging to daocloud registry.
-# logging.debug('Logging to daocloud registry')
-# subprocess.call(['docker', 'login', 'daocloud.io',
-#                  '-u', 'wathehack', '-p', 'dangerous'])
-
 # Pulling all daocloud images.
-daocloud_images = images.get_daocloud_images(gcr_images)
-images.download_images(daocloud_images)
+daocloud_images = images.get_daocloud_images(
+    gcr_images, registry, username)
+success = images.download_images(daocloud_images)
+if success != True:
+    sys.exit(1)
 
 # Tagging daocloud images as gcr images.
 for gcr_image in gcr_images:

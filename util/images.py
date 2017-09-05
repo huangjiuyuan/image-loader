@@ -18,37 +18,43 @@ def get_gcr_images(filepaths):
     return gcr_images
 
 
-def get_daocloud_images(gcr_images):
+def get_daocloud_images(gcr_images, registry, username):
     """
     This function generates a daocloud image set from a gcr image set.
     """
 
     daocloud_images = set()
     for image in gcr_images:
-        daocloud_image = 'registry.cn-hangzhou.aliyuncs.com/ylck/' + \
-            image.split('/')[-1]
+        daocloud_image = '{}/{}/{}'.format(registry,
+                                           username, image.split('/')[-1])
         daocloud_images.add(daocloud_image)
     return daocloud_images
 
 
-def upload_daocloud_images(gcr_images):
+def upload_daocloud_images(gcr_images, registry, username):
     """
     This function downloads all gcr images in an image set, tags the images
     with daocloud names and uploads all daocloud images to daocloud registry.
     """
 
     for image in gcr_images:
-        try:
-            logging.debug('Pulling image {}'.format(image))
-            subprocess.call(['docker', 'pull', image])
-            daocloud_image = 'registry.cn-hangzhou.aliyuncs.com/ylck/' + \
-                image.split('/')[-1]
-            logging.debug('Pushing image {}'.format(daocloud_image))
-            subprocess.call(['docker', 'tag', image, daocloud_image])
-            subprocess.call(['docker', 'push', daocloud_image])
-        except Exception as e:
-            logging.error(e)
-            raise e
+        logging.debug('Pulling image {}'.format(image))
+        for i in range(0, 3):
+            success = subprocess.call(['docker', 'pull', image])
+            if success == 0:
+                break
+            if i == 2:
+                return False
+        daocloud_image = '{}/{}/{}'.format(registry,
+                                           username, image.split('/')[-1])
+        logging.debug('Pushing image {}'.format(daocloud_image))
+        subprocess.call(['docker', 'tag', image, daocloud_image])
+        for i in range(0, 3):
+            success = subprocess.call(['docker', 'push', daocloud_image])
+            if success == 0:
+                break
+            if i == 2:
+                return False
 
 
 def download_images(images):
@@ -57,9 +63,10 @@ def download_images(images):
     """
 
     for image in images:
-        try:
-            logging.debug('Pulling image {}'.format(image))
-            subprocess.call(['docker', 'pull', image])
-        except Exception as e:
-            logging.error(e)
-            raise e
+        logging.debug('Pulling image {}'.format(image))
+        for i in range(0, 3):
+            success = subprocess.call(['docker', 'pull', image])
+            if success == 0:
+                break
+            if i == 2:
+                return False
