@@ -1,8 +1,8 @@
 FROM docker
-ENV KVER 1.6.5
 RUN apk update --no-cache
-RUN apk add --no-cache python git bash make
+RUN apk add --no-cache python git bash make curl
 RUN git clone https://github.com/heptio/kube-conformance.git
 WORKDIR /kube-conformance
 ADD version.py /kube-conformance
-RUN make all
+ENV KVER v1.6.5
+CMD ["./version.py"]

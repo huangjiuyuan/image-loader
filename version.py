@@ -2,6 +2,7 @@
 import logging
 import re
 import os
+import subprocess
 
 
 logging.debug('Setting the target k8s version')
@@ -15,3 +16,4 @@ with open(fname) as f:
         out.write(re.sub(version_pattern, kver, line))
     out.close()
     os.rename(tmp, fname)
+subprocess.call(['make', 'all'])
