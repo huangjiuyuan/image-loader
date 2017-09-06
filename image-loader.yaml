@@ -12,8 +12,8 @@ spec:
     spec:
       containers:
       - name: image-loader
-        image: image-loader
-        command: ["./load", "-h"]
+        image: daocloud.io/daocloud/image-loader
+        command: ["./load.py", "-h"]
         volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
