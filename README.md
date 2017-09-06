@@ -65,7 +65,7 @@ The image named `daocloud.io/huangjiuyuan/IMAGE_NAME` willed be pulled and tagge
 
 ## Build Conformance Test Image
 
-This project uses kube-conformance[<https://github.com/heptio/kube-conformance>] as a tool to build the testing image. To build an intermediate testing image, run
+This project uses [kube-conformance](https://github.com/heptio/kube-conformance) as a tool to build the testing image. To build an intermediate testing image, run
 
 ```
 docker build -t conformance-builder -f Dockerfile.conformance .
