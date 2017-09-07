@@ -39,23 +39,23 @@ def upload_daocloud_images(gcr_images, registry, username):
 
     for image in gcr_images:
         logging.debug('Pulling image {}'.format(image))
-        for i in range(0, 3):
+        for i in range(0, 5):
             success = subprocess.call(['docker', 'pull', image])
             if success == 0:
                 break
-            if i == 2:
-                return False
+            if i == 4:
+                logging.error('Failed on pulling image {}'.format(image))
         daocloud_image = '{}/{}/{}'.format(registry,
                                            username, image.split('/')[-1])
         logging.debug('Pushing image {}'.format(daocloud_image))
         subprocess.call(['docker', 'tag', image, daocloud_image])
-        for i in range(0, 3):
+        for i in range(0, 5):
             success = subprocess.call(['docker', 'push', daocloud_image])
             if success == 0:
                 subprocess.call(['docker', 'rmi', daocloud_image, image])
                 break
-            if i == 2:
-                return False
+            if i == 4:
+                logging.error('Failed on removing image {}'.format(image))
 
 
 def download_images(images):
@@ -70,4 +70,4 @@ def download_images(images):
             if success == 0:
                 break
             if i == 2:
-                return False
+                logging.error('Failed on pulling image {}'.format(image))

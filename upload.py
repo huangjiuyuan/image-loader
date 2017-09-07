@@ -28,6 +28,4 @@ logging.info('The current version of Kubernetes is {}'.format(version))
 gcr_images = images.get_gcr_images(filepaths)
 
 # Pulling images from gcr, tagging the image and pushing to daocloud registry.
-success = images.upload_daocloud_images(gcr_images, registry, username)
-if success != True:
-    sys.exit(1)
+images.upload_daocloud_images(gcr_images, registry, username)

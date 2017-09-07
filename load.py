@@ -30,9 +30,7 @@ gcr_images = images.get_gcr_images(filepaths)
 # Pulling all daocloud images.
 daocloud_images = images.get_daocloud_images(
     gcr_images, registry, username)
-success = images.download_images(daocloud_images)
-if success != True:
-    sys.exit(1)
+images.download_images(daocloud_images)
 
 # Tagging daocloud images as gcr images.
 for gcr_image in gcr_images:
